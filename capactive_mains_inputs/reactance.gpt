@@ -1,0 +1,54 @@
+########################################################
+#
+p=3.14159265358979323844
+# 47nF
+C=47e-9
+# 1k Ohms
+R=1000
+
+# define complex operator
+j={0,1}
+
+set xlabel "Hertz"
+set ylabel "Resistance"
+
+# x is the frequency
+set xrange[50:60]
+
+# z(x) is the reactance
+z(x)=(j/(2*p*x*C))
+
+# denominator
+d(x)=(R*R+z(x)*z(x))
+
+# numerator
+n(x)=(R*R+R*z(x))
+
+plot abs(z(x)) title "reactance over capacitor"
+!sleep 4
+
+set ylabel "denominator value (abs)"
+plot abs(d(x))
+!sleep 4
+
+set ylabel "numerator value (abs)"
+plot abs(n(x))
+!sleep 4
+
+v(x)=abs((n(x))/(d(x)))
+
+# gives large numbers h(x)=arg((n(x))/(d(x)))
+
+set ylabel "voltage to opto-coupler (RMS)"
+plot 240*v(x) title "240 V a.c", 120*v(x) title "120 V a.c"
+!sleep 4
+
+set terminal png
+set output "RMS_volts_to_opto.png"
+plot 240*v(x) title "240 V a.c", 120*v(x) title "120 V a.c"
+
+#set angles degrees
+#set label "phase change in mains over opto"
+#plot 240*h(x) title "240 V a.c", 120*h(x) title "120 V a.c"
+#!sleep 4
+#
